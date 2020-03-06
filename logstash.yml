@@ -1,0 +1,22 @@
+version: '2.3'
+services:
+  logstash:
+    build:
+      context: logstash
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000/tcp"
+      - "5000:5000/udp"
+      - "9600:9600"
+    networks:
+      - default-network
+    volumes:
+      - $PWD/logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml
+      - $PWD/logstash/pipeline:/usr/share/logstash/pipeline
+      - $PWD/logstash/driver:/usr/share/logstash/driver
+      - $PWD/logstash/modules:/usr/share/logstash/modules
+      - $PWD/logstash/pipelines.yml:/usr/share/logstash/pipelines.yml
+
+networks:
+  default-network:
+    external: true

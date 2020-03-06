@@ -1,0 +1,4 @@
+- pipeline.id: source
+  path.config: "/usr/share/logstash/pipeline/source.conf"
+- pipeline.id: es-sink
+  path.config: "/usr/share/logstash/pipeline/es.conf"

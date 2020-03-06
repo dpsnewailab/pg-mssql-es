@@ -1,0 +1,66 @@
+version: "2.3"
+services:
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2017-latest
+    ports:
+      - 1433:1433
+    environment:
+      ACCEPT_EULA: Y
+      SA_PASSWORD: th!sIsVeryHardPasswodr
+    networks:
+      - default-network
+    volumes:
+      - $PWD/init_mssql.sql:/init_mssql.sql
+
+  postgres:
+    image: postgres:11
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: sa
+      POSTGRES_PASSWORD: th!sIsVeryHardPasswodr
+    networks:
+      - default-network
+    volumes:
+      - $PWD/init_pg.sql:/init_pg.sql
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.5.1
+    ports:
+      - 9200:9200
+    environment:
+      node.name: es01
+      http.host: 0.0.0.0
+      network.host: 0.0.0.0
+      transport.host: 127.0.0.1
+      cluster.name: es-docker-cluster
+      discovery.type: single-node
+      bootstrap.memory_lock: "true"
+      cluster.routing.allocation.disk.threshold_enabled: "true"
+      cluster.routing.allocation.disk.watermark.flood_stage: 200mb
+      cluster.routing.allocation.disk.watermark.low: 500mb
+      cluster.routing.allocation.disk.watermark.high: 300mb
+      xpack.license.self_generated.type: basic
+      xpack.security.enabled: "false"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    networks:
+      - default-network
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.5.1
+    ports:
+      - 5601:5601
+    environment:
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+      ELASTICSEARCH_HOSTS: http://elasticsearch:9200
+      ELASTICSEARCH_USERNAME: elastic
+      ELASTICSEARCH_PASSWORD: changeme
+    networks:
+      - default-network
+
+networks:
+  default-network:
+    external: true

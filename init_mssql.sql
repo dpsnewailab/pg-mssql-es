@@ -1,0 +1,21 @@
+DROP DATABASE IF EXISTS my_ms_table
+GO
+
+
+CREATE DATABASE sa;
+GO
+
+USE sa;
+GO
+
+DROP TABLE IF EXISTS my_ms_table
+GO
+
+CREATE TABLE my_ms_table
+(
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    name VARCHAR(63) NOT NULL,
+    age INT,
+    updated DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+GO
